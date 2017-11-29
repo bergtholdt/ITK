@@ -212,15 +212,16 @@ def _get_itk_pixelid(numpy_array_type):
     if not HAVE_NUMPY:
         raise ImportError('Numpy not available.')
     import itk
+    import os
     # This is a Mapping from numpy array types to itk pixel types.
     _np_itk = {numpy.uint8:itk.UC,
                 numpy.uint16:itk.US,
-                numpy.uint32:itk.UI,
-                numpy.uint64:itk.UL,
+                numpy.uint32:itk.UL if os.name == 'nt' else itk.UI,
+                numpy.uint64:itk.ULL if os.name == 'nt' else itk.UL,
                 numpy.int8:itk.SC,
                 numpy.int16:itk.SS,
-                numpy.int32:itk.SI,
-                numpy.int64:itk.SL,
+                numpy.int32:itk.SL if os.name == 'nt' else itk.SI,
+                numpy.int64:itk.SLL if os.name == 'nt' else itk.SL,
                 numpy.float32:itk.F,
                 numpy.float64:itk.D,
                 numpy.complex64:itk.complex[itk.F],
